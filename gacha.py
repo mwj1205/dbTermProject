@@ -1,14 +1,13 @@
 import random
+import mydb as db
 
 star1 = 78.5
 star2 = 18.5
 star3 = 3
 
-star1_list = [10004101, 10005101, 20006101, 30004101, 30005101]
-
-star2_list = [10003201, 20004201, 20005201, 30003201, 40002201, 50002201, 50001201]
-
-star3_list = [10001301, 20001301, 20002301, 20003301, 30001301, 30002301, 40001301]
+star1_list = db.gacha_char(1)
+star2_list = db.gacha_char(2)
+star3_list = db.gacha_char(3)
 
 def rare_gacha():
     pick=random.random() * 100
