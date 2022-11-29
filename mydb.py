@@ -11,8 +11,8 @@ def userinsert(name):
     add_user = ("INSERT INTO User "
                 "(Username) "
                 "VALUES (\'%s\')" %(name))
-
     cursor.execute(add_user)
+    connection.commit()
 # 유저 리스트 읽기
 def userprint():
     userprint = "SELECT Username FROM User"
@@ -24,13 +24,8 @@ def userprint():
 def userdelete(user):
     deluser = "DELETE FROM User WHERE Username = '%s'" %(user)
     cursor.execute(deluser)
-    print(deluser)
+    connection.commit()
 
-    userprint = "SELECT Username FROM User"
-    cursor.execute(userprint)
-
-    row = cursor.fetchall()
-    print(row)
 # 유저 정보 확인
 def seled_user(field, user):
     myquery = "SELECT %s FROM User WHERE Username = '%s'" %(field, user)
@@ -43,6 +38,7 @@ def seled_user(field, user):
 def update_money(kind , num, uid):
     up_pyr = "UPDATE User SET %s = %s WHERE UID = %s" %(kind, num, uid)
     cursor.execute(up_pyr)
+    connection.commit()
 # 인벤토리 읽기
 def read_inventory(uid):
     uinven = "SELECT Item_ID, Remaining FROM Owned_Item WHERE UID = %s" %(uid)
@@ -100,12 +96,14 @@ def get_charac(uid, charid):
         insertchar = "INSERT INTO Owned_Character (UID, Character_ID, Star_quantity)\
         VALUES(%s, %s, %s)" %(uid, charid, stars)
         cursor.execute(insertchar)
+        connection.commit()
         
     else: # 캐릭터가 있었으면
         # 진화석 획득
         inserteligma = "INSERT INTO Owned_Item (UID, Item_ID, Remaining) VALUES(%s, %s, %s)\
                         ON DUPLICATE KEY UPDATE Remaining = Remaining + %s" %(uid, eligmaid, elamount, elamount)
         cursor.execute(inserteligma)
+        connection.commit()
 
 # 보유중인 캐릭터 수
 def char_amount(UID):
@@ -225,10 +223,12 @@ def cal_char_equip(lvstat, etype, etier, elevel):
 def update_char_exp(uid, cid, exp):
     qry = "UPDATE Owned_Character SET Current_EXP = %s WHERE UID = %s AND Character_ID = %s" %(exp, uid, cid)
     cursor.execute(qry)
+    connection.commit()
 # 캐릭터의 여러 종류의 level update
 def char_levelup(uid, cid, num, kind):
     uplevel = "UPDATE Owned_Character SET %s = %s WHERE UID = %s AND Character_ID = %s" %(kind, num, uid, cid)
     cursor.execute(uplevel)
+    connection.commit()
 # 골드가 충분한가 체크
 def check_needgold(uid, num):
     checkgold = "SELECT EXISTS (SELECT Gold FROM User WHERE UID = %s AND GOLD >= %s) as success" %(uid, num)
@@ -250,6 +250,7 @@ def patcheligma(uid, cid, num):
     useeligma = "UPDATE Owned_Item SET Remaining = Remaining - %s WHERE UID = %s AND Item_ID = \
         (SELECT eligma_id FROM Basic_Character WHERE Character_ID = %s)" %(num, uid, cid)
     cursor.execute(useeligma)
+    connection.commit()
 
 # 스킬 강화 재료가 충분한가 확인
 def check_skil_item(uid, itemid, num):
@@ -266,8 +267,10 @@ def patch_items(uid, itemid, num):
     myqry = "UPDATE Owned_Item SET Remaining = Remaining - %s WHERE UID = %s AND Item_ID = %s"\
          %(num, uid, itemid)
     cursor.execute(myqry)
+    connection.commit()
 
 def patch_items_get(uid, itemid, num):
     myqry = "INSERT INTO Owned_Item (UID, Item_ID, Remaining) VALUES(%s, %s, %s)\
                 ON DUPLICATE KEY UPDATE Remaining = Remaining + %s" %(uid, itemid, num, num)
     cursor.execute(myqry)
+    connection.commit()

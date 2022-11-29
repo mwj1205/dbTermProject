@@ -95,6 +95,7 @@ def seluser(frame):
     if su_userlist.curselection() :
         Selected_user = su_userlist.get(su_userlist.curselection())
         openFrame(frame)
+    
 
 def patch_userinfo(Selected_user):
     global Username
@@ -110,6 +111,7 @@ def patch_userinfo(Selected_user):
         uf_label_user_UID.configure(text=UID)
         uf_label_owned_gold.configure(text=Gold)
         uf_label_owned_Pyroxene.configure(text=Pyroxene)
+        messagebox.showinfo("선택한 유저 정보", "Name = %s\nUID = %s" %(Username, UID))
 
 
 su_user_select_btn = Button(frame_user_select, padx=15, pady=5, text="접속하기", command=lambda:[seluser(frame_user), patch_userinfo(Selected_user)])
@@ -665,7 +667,7 @@ cinfo_conmat_starup.grid(row=1, column=5)
 
 # 캐릭터 레벨업 버튼
 def Ch_expup(exp):
-    if real_stat[0] < 30:
+    if real_stat[0] < 50:
         db.update_char_exp(UID, cbasicinfo[0], cnowinfo[0]+exp)
         build_nc_list()
         patchGold(exp*10)
